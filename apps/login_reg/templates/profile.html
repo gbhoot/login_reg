@@ -29,6 +29,29 @@
             </div>
         </nav>
     </header>
+
+    <main class="mt-5">
+        <div class="container">
+            <div class="row mb-3">
+                <div class="col-md-3"></div>
+                <div class="col text-right"><b>First Name:</b></div>
+                <div class="col text-left">{{ user.first_name }}</div>
+                <div class="col-md-3"></div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-3"></div>
+                <div class="col text-right"><b>Last Name:</b></div>
+                <div class="col text-left">{{ user.last_name }}</div>
+                <div class="col-md-3"></div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-3"></div>
+                <div class="col text-right"><b>Email Address:</b></div>
+                <div class="col text-left">{{ user.email }}</div>
+                <div class="col-md-3"></div>
+            </div>
+        </div>
+    </main>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" 
