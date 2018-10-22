@@ -61,13 +61,13 @@
                                     </p>
                                     <div class="container text-right mb-3">
                                         <span>{{ quote.likes.count }} people like this</span>
-                                        {% if user not in quote.likes.all %}
-                                            <a href="/likeQuote/{{ quote.id }}" class="ml-3">
-                                                <button class="btn btn-primary">Like</button>
+                                        {% if user in quote.likes.all %}
+                                            <a href="/unlikeQuote/{{ quote.id }}" class="ml-3">
+                                                <button class="btn btn-secondary">UnLike</button>
                                             </a>
                                         {% else %}
-                                            <a href="/unlikeQuote/{{ quote.id }}" class="ml-3">
-                                                <button class="btn btn-primary">UnLike</button>
+                                            <a href="/likeQuote/{{ quote.id }}" class="ml-3">
+                                                <button class="btn btn-primary">Like</button>
                                             </a>
                                         {% endif %}
                                     </div>
