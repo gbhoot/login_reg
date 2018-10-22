@@ -5,6 +5,8 @@ from django.utils import timezone, timesince
 import pytz
 import datetime
 import bcrypt
+from django import template
+register = template.Library()
 
 # Create your views here.
 def index(request):
@@ -51,14 +53,37 @@ def processLogin(request):
 
     return redirect('/dashboard')
 
+@register.filter
 def dashboard(request):
     if 'id' not in request.session:
         return redirect('/')
+
     
+
+    user = User.objects.get(id=request.session['id'])
+    likes = Like.objects.all()
+
+    # for like in likes:
+    #     like.delete()
+
     data = {
-        'user'      :   User.objects.get(id=request.session['id']),
+        'user'      :   user,
         'quotes'    :   Quote.objects.order_by("-created_at"),
+        'like'      :   [False],
+        'likes'     :   [0],
     }
+
+    if likes:
+        for quote in data['quotes']:
+            data['likes'].append(int(Like.objects.count_likes(quote)))
+            error = Like.objects.like_validator(quote, user)
+            if len(error):
+                data['like'].append(True)
+            else:
+                data['like'].append(False)
+
+    print(data['like'])
+    print(data['likes'])
     
     return render(request, 'dashboard.html', data)
 
@@ -81,7 +106,7 @@ def show(request, id):
     data = {
         'user'      :   User.objects.get(id=request.session['id']),
         'quoter'    :   quoter,
-        'quotes'    :   Quote.objects.filter(user=quoter),
+        'quotes'    :   Quote.objects.filter(user=quoter).order_by("-created_at"),
     }
 
     return render(request, 'quoter.html', data)
@@ -126,6 +151,33 @@ def addQuote(request):
     
     print("Successfully added: ", newQuote)
     
+    return redirect('/dashboard')
+
+def deleteQuote(request, id):
+    if 'id' not in request.session:
+        return redirect('/')
+    
+    quote = Quote.objects.get(id=id)
+    quote.delete()
+
+    return redirect('/dashboard')
+
+def likeQuote(request, id):
+    if 'id' not in request.session:
+        return redirect('/')
+    
+    user = User.objects.get(id=request.session['id'])
+    quote = Quote.objects.get(id=id)
+    currentTime = timezone.now()
+
+    error = Like.objects.like_validator(quote, user)
+    if len(error):
+        return redirect('/dashboard')
+
+    newLike = Like.objects.create(user=user, quote=quote, created_at=currentTime, updated_at=currentTime)
+
+    print(newLike)
+
     return redirect('/dashboard')
     
 def logout(request):

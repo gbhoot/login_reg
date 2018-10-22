@@ -7,26 +7,30 @@ class UserManager(models.Manager):
     def reg_validator(self, regData, id=0, update=False):
         errors = {}
 
+        # Remove spaces from names
+        fName = regData['fName'].replace(' ', '')
+        lName = regData['lName'].replace(' ', '')
+
         # If we're doing an update, get an instane of the current user
         if update:
             user = User.objects.get(id=id)
 
         # Check the first name input
         if 'fName' in regData:
-            if len(regData['fName']) < 1:
+            if len(fName) < 1:
                 errors['fName'] = "Please enter your first name"
-            elif len(regData['fName']) < 3:
+            elif len(fName) < 3:
                 errors['fName'] = "First name should be at least 3 characters"
-            elif not regData['fName'].isalpha():
+            elif not fName.isalpha():
                 errors['fName'] = "First name should only contain alphabetical characters"
 
         # Check the last name input
         if 'lName' in regData:
-            if len(regData['lName']) < 1:
+            if len(lName) < 1:
                 errors['lName'] = "Please enter your last name"
-            elif len(regData['lName']) < 3:
+            elif len(lName) < 3:
                 errors['lName'] = "Last name should be at least 3 characters"
-            elif not regData['lName'].isalpha():
+            elif not lName.isalpha():
                 errors['lName'] = "Last name should only contain alphabetical characters"
 
         # Check email address input
@@ -44,7 +48,7 @@ class UserManager(models.Manager):
                 try:
                     if User.objects.get(email=regData['email']):
                         if update:
-                            if postData['email'] != user.email:
+                            if regData['email'] != user.email:
                                 print("Is it even coming here?")
                                 errors['email'] = "Email address already taken"
                         else:
@@ -137,6 +141,28 @@ class QuoteManager(models.Manager):
         
         return errors
 
+class LikeManager(models.Manager):
+    def like_validator(self, quote, liker):
+        errors = {}
+
+        # Check if the liker has already liked this quote before
+        likes = Like.objects.filter(quote=quote)
+        # print("Over here", likes)
+        for like in likes:
+            if like.user == liker:
+                errors['liker'] = "Already liked"
+        
+        return errors
+
+    def count_likes(self, quote):
+
+        count = 0
+        likes = Like.objects.filter(quote=quote)
+        for like in likes:
+            count += 1
+        
+        return count
+
 class User(models.Model):
     first_name = models.CharField(max_length=45)
     last_name = models.CharField(max_length=45)
@@ -159,3 +185,4 @@ class Like(models.Model):
     updated_at = models.DateTimeField()
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="likes")
     quote = models.ForeignKey(Quote, on_delete=models.CASCADE, related_name="likes")
+    objects = LikeManager()

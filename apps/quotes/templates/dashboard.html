@@ -15,6 +15,10 @@
         textarea {
             resize: none;
         }
+
+        img {
+            width: 30px;
+        }
     </style>
 </head>
 
@@ -55,6 +59,24 @@
                                         <a href="/user/{{ quote.user.id }}/">{{ quote.user.first_name }} 
                                             {{ quote.user.last_name }}</a>
                                     </p>
+                                    <div class="container text-right mb-3">
+                                        <span>{{ likes.0 }} people like this</span>
+                                        {% if like.0 == False %}
+                                            <a href="/likeQuote/{{ quote.id }}" class="ml-3">
+                                                <button class="btn btn-primary">Like</button>
+                                            </a>
+                                        {% else %}
+                                            <a href="/unlikeQuote/{{ quote.id }}" class="ml-3">
+                                                <button class="btn btn-primary">UnLike</button>
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                    {% if quote.user.id == user.id %}
+                                        <a href="/deleteQuote/{{ quote.id }}/">
+                                            <img src="https://image.flaticon.com/icons/svg/63/63260.svg" 
+                                                alt="delete-icon">
+                                        </a>
+                                    {% endif %}
                                 </div>
                             {% endfor %}
                         {% else %}
@@ -76,9 +98,9 @@
                         <form action="/addQuote/" method="POST">
                             {% csrf_token %}
                             <div class="form-group">
-                              <label for="author"><h6>Author:</h6></label>
+                              <label for="Quoter"><h6>Quoter:</h6></label>
                               <input type="text" name="author" id="author" class="form-control" 
-                                placeholder="Author's name">
+                                placeholder="Quoter's name">
                             </div>
                             <div class="mt-0">
                                 {% if messages %}
