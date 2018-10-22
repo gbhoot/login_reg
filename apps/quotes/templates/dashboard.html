@@ -60,8 +60,8 @@
                                             {{ quote.user.last_name }}</a>
                                     </p>
                                     <div class="container text-right mb-3">
-                                        <span>{{ likes.0 }} people like this</span>
-                                        {% if like.0 == False %}
+                                        <span>{{ quote.likes.count }} people like this</span>
+                                        {% if user not in quote.likes.all %}
                                             <a href="/likeQuote/{{ quote.id }}" class="ml-3">
                                                 <button class="btn btn-primary">Like</button>
                                             </a>
