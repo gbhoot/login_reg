@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'tiozc%98tmf@+a6wu5g(e@^k2m&rs(j4+2swzp=)*o-zh!@edj'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['18.223.100.162', 'localhost']
 
@@ -31,7 +31,8 @@ ALLOWED_HOSTS = ['18.223.100.162', 'localhost']
 # Application definition
 
 INSTALLED_APPS = [
-    'apps.login_reg',
+    # 'apps.login_reg',
+    'apps.quotes',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

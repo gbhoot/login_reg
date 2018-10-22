@@ -18,6 +18,7 @@ from django.conf.urls import include
 from django.urls import path
 
 urlpatterns = [
-    path('', include('apps.login_reg.urls')),
+    # path('', include('apps.login_reg.urls')),
+    path('', include('apps.quotes.urls')),
     path('admin/', admin.site.urls),
 ]
